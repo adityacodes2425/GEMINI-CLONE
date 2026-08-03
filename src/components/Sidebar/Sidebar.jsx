@@ -1,4 +1,6 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
+import { Context } from "../../context/context";
+
 import {
   MdMenu,
   MdAdd,
@@ -10,6 +12,7 @@ import "./Sidebar.css";
 
 function Sidebar() {
   const [extended, setExtended] = useState(true);
+  const { prevPrompts, newChat, loadPrompt } = useContext(Context);
 
   return (
     <div className="sidebar">
@@ -20,10 +23,25 @@ function Sidebar() {
           onClick={() => setExtended(!extended)}
         />
 
-        <div className="new-chat">
+       <div className="new-chat" onClick={newChat}>
           <MdAdd size={22} />
           {extended && <p>New Chat</p>}
         </div>
+        {extended && (
+         <div className="recent">
+           <p className="recent-title">Recent</p>
+
+        {prevPrompts.map((item, index) => (
+  <div
+    className="recent-item"
+    key={index}
+    onClick={() => loadPrompt(item)}
+  >
+    <p>{item}</p>
+  </div>
+))}
+  </div>
+)}
       </div>
 
       <div className="bottom">

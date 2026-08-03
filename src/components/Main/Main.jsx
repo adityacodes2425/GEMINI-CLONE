@@ -1,5 +1,6 @@
 import { useContext } from "react";
 import { Context } from "../../context/context.jsx";
+import ReactMarkdown from "react-markdown";
 
 import "./Main.css";
 import {
@@ -56,7 +57,7 @@ function Main() {
     </>
   ) : (
     <div className="result">
-      {loading ? <p>Loading...</p> : <p>{resultData}</p>}
+      {loading ? <p>Loading...</p> : <ReactMarkdown>{resultData}</ReactMarkdown>}
     </div>
   )}
 

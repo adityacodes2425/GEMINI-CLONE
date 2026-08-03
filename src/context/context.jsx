@@ -26,6 +26,22 @@ const [prevPrompts, setPrevPrompts] = useState([]);
   setLoading(false);
   setInput("");
 };
+const newChat = () => {
+  setShowResult(false);
+  setLoading(false);
+  setResultData("");
+  setInput("");
+};
+const loadPrompt = async (prompt) => {
+  setRecentPrompt(prompt);
+  setShowResult(true);
+  setLoading(true);
+
+  const response = await runChat(prompt);
+
+  setResultData(response);
+  setLoading(false);
+};
 
   const value = {
     input,
@@ -38,6 +54,8 @@ const [prevPrompts, setPrevPrompts] = useState([]);
      setRecentPrompt,
      prevPrompts,
     setPrevPrompts,
+    newChat,
+    loadPrompt,
   };
 
   return (

@@ -42,3 +42,30 @@
 .new-chat:hover {
   background: #dde3ea;
 }
+.recent {
+  margin-top: 30px;
+}
+
+.recent-title {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 10px;
+}
+
+.recent-item {
+  padding: 10px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  transition: 0.3s;
+}
+
+.recent-item:hover {
+  background: #dde3ea;
+}
+
+.recent-item p {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
