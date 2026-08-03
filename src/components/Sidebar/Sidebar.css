@@ -1,0 +1,44 @@
+.sidebar {
+  min-height: 100vh;
+  width: 250px;
+  background: #f0f4f9;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 20px 15px;
+}
+
+.menu {
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+
+.new-chat {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: #e6eaf1;
+  padding: 10px 15px;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.bottom {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.bottom-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px;
+  border-radius: 25px;
+  cursor: pointer;
+}
+
+.bottom-item:hover,
+.new-chat:hover {
+  background: #dde3ea;
+}
