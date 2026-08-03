@@ -1,4 +1,4 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useEffect } from "react";
 import { runChat } from "../config/gemini";
 
 export const Context = createContext();
@@ -9,55 +9,115 @@ const ContextProvider = ({ children }) => {
   const [resultData, setResultData] = useState("");
   const [showResult, setShowResult] = useState(false);
   const [recentPrompt, setRecentPrompt] = useState("");
-const [prevPrompts, setPrevPrompts] = useState([]);
+  const [messages, setMessages] = useState(() => {
+  const saved = localStorage.getItem("messages");
+            return saved ? JSON.parse(saved) : [];
+          });
+  const [prevPrompts, setPrevPrompts] = useState(() => {
+  const saved = localStorage.getItem("prevPrompts");
+        return saved ? JSON.parse(saved) : [];
+           });
 
-  const onSent = async () => {
+
+
+const [chatHistory, setChatHistory] = useState(() => {
+  const saved = localStorage.getItem("chatHistory");
+  return saved ? JSON.parse(saved) : [];
+});
+  
+useEffect(() => {
+  localStorage.setItem(
+    "prevPrompts",
+    JSON.stringify(prevPrompts)
+  );
+}, [prevPrompts]);
+
+useEffect(() => {
+  localStorage.setItem(
+    "chatHistory",
+    JSON.stringify(chatHistory)
+  );
+}, [chatHistory]);
+
+useEffect(() => {
+  localStorage.setItem(
+    "messages",
+    JSON.stringify(messages)
+  );
+}, [messages]);
+
+ const onSent = async () => {
   if (!input.trim()) return;
 
   setLoading(true);
   setShowResult(true);
 
-  try {
-    setRecentPrompt(input);
-    setPrevPrompts((prev) => [...prev, input]);
+  setRecentPrompt(input);
 
-    const response = await runChat(input);
+  setPrevPrompts((prev) => {
+  if (prev.includes(input)) return prev;
+  return [...prev, input];
+});
 
-    setResultData(response);
-    setInput("");
-  } catch (error) {
-    console.error(error);
-    setResultData(
-      "⚠️ Gemini API quota exceeded. Please wait or use another API key."
-    );
-  } finally {
-    setLoading(false);
+
+const response = await runChat(input);
+
+setResultData(response);
+
+setMessages((prev) => [
+  ...prev,
+  {
+    role: "user",
+    text: input,
+  },
+  {
+    role: "ai",
+    text: response,
+  },
+]);
+
+setChatHistory((prev) => [
+  ...prev,
+  {
+    prompt: input,
+    response: response,
   }
+]);
+
+  setInput("");
+  setLoading(false);
 };
+
 const newChat = () => {
   setShowResult(false);
   setLoading(false);
   setResultData("");
-    setRecentPrompt("");
+  setRecentPrompt("");
   setInput("");
+  setMessages([]);
 };
-const loadPrompt = async (prompt) => {
-  setRecentPrompt(prompt);
-  setShowResult(true);
-  setLoading(true);
-  setInput("");
+const loadPrompt = (prompt) => {
+  const chat = chatHistory.find(
+    (item) => item.prompt === prompt
+  );
 
-  try {
-    const response = await runChat(prompt);
-    setResultData(response);
-  } catch (error) {
-    console.error(error);
-    setResultData(
-      "⚠️ Gemini API quota exceeded. Please wait or use another API key."
-    );
-  } finally {
-    setLoading(false);
-  }
+  if (chat) {
+  setRecentPrompt(chat.prompt);
+  setResultData(chat.response);
+
+  setMessages([
+    {
+      role: "user",
+      text: chat.prompt,
+    },
+    {
+      role: "ai",
+      text: chat.response,
+    },
+  ]);
+
+  setShowResult(true);
+}
 };
 
   const value = {
@@ -73,6 +133,10 @@ const loadPrompt = async (prompt) => {
     setPrevPrompts,
     newChat,
     loadPrompt,
+    chatHistory,
+    setChatHistory,
+    messages,
+    setMessages,
   };
 
   return (

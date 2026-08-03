@@ -20,6 +20,7 @@ function Main() {
     resultData,
     showResult,
     recentPrompt,
+    messages,
   } = useContext(Context);
 
   return (
@@ -72,27 +73,37 @@ function Main() {
               </div>
             </div>
           </>
-        ) : (
+                ) : (
           <div className="result">
-            <div className="result-title">
-              <div className="profile">A</div>
-              <p>{recentPrompt}</p>
-            </div>
 
-            <div className="result-data">
-              <div className="profile ai">AI</div>
+  {messages.map((msg, index) => (
+    <div className="message" key={index}>
 
-              {loading ? (
-                <div className="loader">
-                  <hr />
-                  <hr />
-                  <hr />
-                </div>
-              ) : (
-                <MarkdownRenderer content={resultData} />
-              )}
-            </div>
-          </div>
+      <div className="profile">
+        {msg.role === "user" ? "A" : "AI"}
+      </div>
+
+      <div className="answer">
+        {msg.role === "ai" ? (
+          <MarkdownRenderer content={msg.text} />
+        ) : (
+          <p>{msg.text}</p>
+        )}
+      </div>
+
+    </div>
+  ))}
+
+
+  {loading && (
+    <div className="loader">
+      <hr />
+      <hr />
+      <hr />
+    </div>
+  )}
+
+</div>
         )}
 
         <div className="search-box">

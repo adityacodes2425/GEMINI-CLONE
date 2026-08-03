@@ -31,7 +31,7 @@ function Sidebar() {
          <div className="recent">
            <p className="recent-title">Recent</p>
 
-        {prevPrompts.map((item, index) => (
+  {prevPrompts.slice().reverse().map((item, index) => (
   <div
     className="recent-item"
     key={index}
