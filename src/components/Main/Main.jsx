@@ -1,6 +1,5 @@
 import { useContext } from "react";
 import { Context } from "../../context/context.jsx";
-import ReactMarkdown from "react-markdown";
 import MarkdownRenderer from "../MarkdownRenderer/MarkdownRenderer";
 
 import "./Main.css";
@@ -13,8 +12,15 @@ import {
 } from "react-icons/md";
 
 function Main() {
-    const { input, setInput, onSent, loading, resultData, showResult } =
-  useContext(Context);
+   const {
+  input,
+  setInput,
+  onSent,
+  loading,
+  resultData,
+  showResult,
+  recentPrompt,
+} = useContext(Context);
   return (
     <div className="main">
       <div className="main-nav">
@@ -58,8 +64,27 @@ function Main() {
     </>
   ) : (
     <div className="result">
-      {loading ? <p>Loading...</p> : <MarkdownRenderer content={resultData} />}
+
+  <div className="result-title">
+    <div className="profile">A</div>
+    <p>{recentPrompt}</p>
+  </div>
+
+  <div className="result-data">
+
+    <div className="profile ai">
+      AI
     </div>
+
+    {loading ? (
+      <p>Thinking...</p>
+    ) : (
+      <MarkdownRenderer content={resultData} />
+    )}
+
+  </div>
+
+</div>
   )}
 
   <div className="search-box">

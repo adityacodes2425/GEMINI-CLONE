@@ -17,30 +17,47 @@ const [prevPrompts, setPrevPrompts] = useState([]);
   setLoading(true);
   setShowResult(true);
 
-  setRecentPrompt(input);
-  setPrevPrompts((prev) => [...prev, input]);
+  try {
+    setRecentPrompt(input);
+    setPrevPrompts((prev) => [...prev, input]);
 
-  const response = await runChat(input);
+    const response = await runChat(input);
 
-  setResultData(response);
-  setLoading(false);
-  setInput("");
+    setResultData(response);
+    setInput("");
+  } catch (error) {
+    console.error(error);
+    setResultData(
+      "⚠️ Gemini API quota exceeded. Please wait or use another API key."
+    );
+  } finally {
+    setLoading(false);
+  }
 };
 const newChat = () => {
   setShowResult(false);
   setLoading(false);
   setResultData("");
+    setRecentPrompt("");
   setInput("");
 };
 const loadPrompt = async (prompt) => {
   setRecentPrompt(prompt);
   setShowResult(true);
   setLoading(true);
+  setInput("");
 
-  const response = await runChat(prompt);
-
-  setResultData(response);
-  setLoading(false);
+  try {
+    const response = await runChat(prompt);
+    setResultData(response);
+  } catch (error) {
+    console.error(error);
+    setResultData(
+      "⚠️ Gemini API quota exceeded. Please wait or use another API key."
+    );
+  } finally {
+    setLoading(false);
+  }
 };
 
   const value = {
